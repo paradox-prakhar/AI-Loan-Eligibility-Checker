@@ -1,0 +1,21 @@
+{
+  "name": "@finwise/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

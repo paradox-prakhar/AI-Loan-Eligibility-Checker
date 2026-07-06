@@ -1,0 +1,21 @@
+{
+  "name": "finwise-ai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "FinWise AI - Intelligent Loan Eligibility, Credit Analysis & Financial Advisory Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm --prefix apps/api run dev\" \"npm --prefix apps/web run dev\"",
+    "build": "npm --prefix apps/api run build && npm --prefix apps/web run build",
+    "lint": "npm --prefix apps/api run lint && npm --prefix apps/web run lint",
+    "test": "npm --prefix apps/api run test && npm --prefix apps/web run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.5.3"
+  }
+}

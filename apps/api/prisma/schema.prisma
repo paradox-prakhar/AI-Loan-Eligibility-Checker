@@ -1,0 +1,182 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
+}
+
+model User {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  email           String            @unique
+  passwordHash    String?
+  fullName        String
+  role            UserRole          @default(USER)
+  phone           String?
+  googleId        String?           @unique
+  avatarUrl       String?
+  emailVerifiedAt DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  profiles        FinancialProfile[]
+  reports         Report[]
+  conversations   AIConversation[]
+  loanHistory     LoanHistory[]
+  creditAnalyses  CreditAnalysis[]
+  settings        Setting?
+  auditLogs       AuditLog[]
+}
+
+model FinancialProfile {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  age             Int
+  employmentType  EmploymentType
+  annualIncome    Float
+  monthlyIncome   Float
+  existingEmi     Float
+  creditScore     Int
+  debt            Float
+  savings         Float
+  investments     Float
+  city            String
+  employmentYears Float
+  assetsValue     Float
+  liabilities     Float
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Report {
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String          @db.ObjectId
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            ReportType
+  title           String
+  summary         String
+  eligibilityData Json?
+  creditData      Json?
+  riskData        Json?
+  adviceData      Json?
+  pdfUrl          String?
+  googleSheetUrl  String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model LoanHistory {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loanType        LoanType
+  loanAmount      Float
+  approvedAmount  Float?
+  tenureMonths    Int
+  interestRate    Float
+  emi             Float
+  status          LoanStatus
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CreditAnalysis {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  score           Int
+  rating          CreditRating
+  utilization     Float
+  paymentHistory  Float
+  creditAge       Float
+  factors         Json
+  suggestions     Json
+  predictedScore  Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AIConversation {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  prompt          String
+  response        String
+  context         Json?
+  createdAt       DateTime @default(now())
+}
+
+model Setting {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId              String   @unique @db.ObjectId
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme               String   @default("dark-glass")
+  emailNotifications  Boolean  @default(true)
+  marketingEmails     Boolean  @default(false)
+  twoFactorEnabled    Boolean  @default(false)
+  updatedAt           DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?   @db.ObjectId
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action      String
+  entity      String
+  entityId    String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum EmploymentType {
+  SALARIED
+  SELF_EMPLOYED
+  BUSINESS_OWNER
+  FREELANCER
+  STUDENT
+  RETIRED
+}
+
+enum ReportType {
+  ELIGIBILITY
+  CREDIT
+  EMI
+  RISK
+  ADVISORY
+  RECOMMENDATION
+  COMBINED
+}
+
+enum LoanType {
+  HOME
+  CAR
+  EDUCATION
+  BUSINESS
+  PERSONAL
+  GOLD
+}
+
+enum LoanStatus {
+  DRAFT
+  APPLIED
+  APPROVED
+  REJECTED
+  DISBURSED
+  CLOSED
+}
+
+enum CreditRating {
+  EXCELLENT
+  VERY_GOOD
+  GOOD
+  FAIR
+  POOR
+}
