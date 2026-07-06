@@ -12,7 +12,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Bot, CheckCircle2, FileDown, LineChart, Sparkles, Shield, TrendingUp } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis, Line, LineChart as ReLineChart, Pie, PieChart } from 'recharts';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { calculateEmi, creditAnalysisInputSchema, emiCalculatorInputSchema, loanEligibilityInputSchema } from '@finwise/shared';
@@ -50,7 +49,7 @@ export function DashboardClient() {
   const [emiResult, setEmiResult] = useState<{ emi: number; totalPayment: number; totalInterest: number } | null>(null);
   const [riskLevel, setRiskLevel] = useState<'Low' | 'Medium' | 'High' | 'Very High'>('Low');
 
-  const eligibilityForm = useForm<z.infer<typeof eligibilityUiSchema>>({
+  const eligibilityForm = useForm<z.input<typeof eligibilityUiSchema>>({
     resolver: zodResolver(eligibilityUiSchema),
     defaultValues: {
       age: 31,
@@ -70,7 +69,7 @@ export function DashboardClient() {
     },
   });
 
-  const creditForm = useForm<z.infer<typeof creditUiSchema>>({
+  const creditForm = useForm<z.input<typeof creditUiSchema>>({
     resolver: zodResolver(creditUiSchema),
     defaultValues: {
       creditScore: 768,
@@ -82,7 +81,7 @@ export function DashboardClient() {
     },
   });
 
-  const emiForm = useForm<z.infer<typeof emiUiSchema>>({
+  const emiForm = useForm<z.input<typeof emiUiSchema>>({
     resolver: zodResolver(emiUiSchema),
     defaultValues: {
       loanAmount: 8000000,
@@ -92,7 +91,7 @@ export function DashboardClient() {
   });
 
   const eligibilityMutation = useMutation({
-    mutationFn: async (values: z.infer<typeof eligibilityUiSchema>) => {
+    mutationFn: async (values: z.input<typeof eligibilityUiSchema>) => {
       const response = await api.post('/finance/eligibility/check', values);
       return response.data.data as { status: string; riskScore: number; recommendations: string[]; confidenceScore: number; maximumLoanAmount: number };
     },
@@ -105,7 +104,7 @@ export function DashboardClient() {
   });
 
   const creditMutation = useMutation({
-    mutationFn: async (values: z.infer<typeof creditUiSchema>) => {
+    mutationFn: async (values: z.input<typeof creditUiSchema>) => {
       const response = await api.post('/finance/credit/analyze', values);
       return response.data.data as { rating: string; suggestions: string[]; predictedFutureScore: number };
     },
@@ -117,7 +116,7 @@ export function DashboardClient() {
   });
 
   const emiMutation = useMutation({
-    mutationFn: async (values: z.infer<typeof emiUiSchema>) => {
+    mutationFn: async (values: z.input<typeof emiUiSchema>) => {
       const response = await api.post('/finance/emi/calculate', values);
       return response.data.data as ReturnType<typeof calculateEmi>;
     },
@@ -202,16 +201,8 @@ export function DashboardClient() {
             <CardTitle>Financial Dashboard</CardTitle>
             <CardDescription>Income, savings, and liability mix with smooth performance trends.</CardDescription>
           </CardHeader>
-          <CardContent className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="name" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)' }} />
-                <Bar dataKey="value" radius={[12, 12, 0, 0]} fill="#4f46e5" />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent>
+            <MiniBarChart data={chartData} />
           </CardContent>
         </Card>
         <Card>
@@ -219,16 +210,8 @@ export function DashboardClient() {
             <CardTitle>Credit Trend</CardTitle>
             <CardDescription>Eligibility and score momentum over the last six months.</CardDescription>
           </CardHeader>
-          <CardContent className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <ReLineChart data={eligibilitySeries}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)' }} />
-                <Line type="monotone" dataKey="score" stroke="#06b6d4" strokeWidth={3} dot={{ r: 4 }} />
-              </ReLineChart>
-            </ResponsiveContainer>
+          <CardContent>
+            <MiniLineChart data={eligibilitySeries} />
           </CardContent>
         </Card>
       </section>
@@ -296,4 +279,74 @@ export function DashboardClient() {
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+}
+
+function MiniBarChart({ data }: { data: Array<{ name: string; value: number }> }) {
+  const maxValue = Math.max(...data.map((item) => item.value), 1);
+
+  return (
+    <div className="flex h-80 items-end gap-4 rounded-3xl border border-white/10 bg-black/10 p-4">
+      {data.map((item) => {
+        const height = `${Math.max((item.value / maxValue) * 100, 8)}%`;
+        return (
+          <div key={item.name} className="flex flex-1 flex-col items-center gap-3">
+            <div className="flex w-full flex-1 items-end">
+              <div className="relative h-full w-full rounded-2xl bg-white/5">
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 rounded-2xl bg-linear-to-t from-indigo-500 via-cyan-400 to-emerald-300 shadow-lg shadow-cyan-500/20"
+                  initial={{ height: 0 }}
+                  animate={{ height }}
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
+            <span className="text-xs text-slate-300">{item.name}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function MiniLineChart({ data }: { data: Array<{ month: string; score: number }> }) {
+  const width = 640;
+  const height = 320;
+  const padding = 28;
+  const maxScore = Math.max(...data.map((point) => point.score), 100);
+  const minScore = Math.min(...data.map((point) => point.score), 0);
+  const range = maxScore - minScore || 1;
+
+  const points = data.map((point, index) => {
+    const x = padding + (index / (data.length - 1 || 1)) * (width - padding * 2);
+    const y = padding + (1 - (point.score - minScore) / range) * (height - padding * 2);
+    return { ...point, x, y };
+  });
+
+  const linePath = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ');
+
+  return (
+    <div className="rounded-3xl border border-white/10 bg-black/10 p-4">
+      <svg viewBox={`0 0 ${width} ${height}`} className="h-80 w-full overflow-visible">
+        <defs>
+          <linearGradient id="finwiseLine" x1="0%" x2="100%" y1="0%" y2="0%">
+            <stop offset="0%" stopColor="#06b6d4" />
+            <stop offset="100%" stopColor="#4f46e5" />
+          </linearGradient>
+        </defs>
+        {[0, 1, 2, 3].map((step) => {
+          const y = padding + (step / 3) * (height - padding * 2);
+          return <line key={step} x1={padding} x2={width - padding} y1={y} y2={y} stroke="rgba(255,255,255,0.08)" strokeDasharray="4 6" />;
+        })}
+        <path d={linePath} fill="none" stroke="url(#finwiseLine)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+        {points.map((point) => (
+          <g key={point.month}>
+            <circle cx={point.x} cy={point.y} r="6" fill="#0b1120" stroke="#06b6d4" strokeWidth="3" />
+            <text x={point.x} y={height - 8} textAnchor="middle" fill="#94a3b8" fontSize="12">
+              {point.month}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
 }

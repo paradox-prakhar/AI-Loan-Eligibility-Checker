@@ -13,13 +13,13 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@finwise/shared": ["../../packages/shared/src/index.ts"]
+      "@finwise/shared": ["../../packages/shared/dist/index.d.ts"]
     }
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/**/*.ts", "../../packages/shared/dist/**/*.d.ts"],
   "exclude": ["dist", "node_modules"]
 }

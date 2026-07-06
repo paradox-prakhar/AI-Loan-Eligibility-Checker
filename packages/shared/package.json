@@ -9,6 +9,7 @@
     "lint": "eslint \"src/**/*.ts\"",
     "test": "vitest run"
   },
+  "files": ["dist"],
   "dependencies": {
     "zod": "^4.0.17"
   },

@@ -7,7 +7,7 @@ export function createApp() {
   const app = express();
   applySecurity(app);
 
-  app.get('/', (_req, res) => {
+  app.get('/', (req, res) => {
     res.json({ success: true, message: 'FinWise AI API' });
   });
 

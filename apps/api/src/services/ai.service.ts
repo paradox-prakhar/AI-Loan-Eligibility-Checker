@@ -42,9 +42,9 @@ export async function generateFinancialAdvice(input: {
       return buildFallbackAdvice({ eligibility, credit, risk, goals: input.goals });
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { content?: Array<{ text?: string }> };
     const text = Array.isArray(data.content)
-      ? data.content.map((item: { text?: string }) => item.text ?? '').join('\n')
+      ? data.content.map((item) => item.text ?? '').join('\n')
       : 'Claude response unavailable.';
 
     return {
