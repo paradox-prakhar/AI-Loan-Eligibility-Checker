@@ -1,0 +1,794 @@
+/* =========================================================
+   FinWise AI — Credit Score Analyzer
+   style.css  |  Modern Fintech + Glassmorphism UI
+   ========================================================= */
+
+/* ── 1. Google Font & CSS Custom Properties ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Color palette */
+  --clr-bg-start:    #07111f;
+  --clr-bg-mid:      #101b31;
+  --clr-bg-end:      #1d3148;
+
+  --clr-primary:     #7c3aed;   /* violet */
+  --clr-primary-lt:  #a78bfa;
+  --clr-accent:      #14b8a6;   /* teal */
+  --clr-accent-lt:   #34d399;
+
+  --clr-poor:        #fb7185;
+  --clr-good:        #f59e0b;
+  --clr-excellent:   #22c55e;
+
+  --clr-glass-bg:    rgba(255, 255, 255, 0.08);
+  --clr-glass-border:rgba(255, 255, 255, 0.16);
+  --clr-glass-hover: rgba(255, 255, 255, 0.12);
+
+  --clr-text:        #f8fafc;
+  --clr-text-muted:  #cbd5e1;
+  --clr-text-faint:  #94a3b8;
+
+  /* Spacing & radius */
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --radius-xl:  30px;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-base: 0.35s ease;
+  --transition-slow: 0.6s ease;
+}
+
+/* ── 2. Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--clr-bg-start);
+  color: var(--clr-text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px 48px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── 3. Animated Gradient Background ─────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #07111f 0%,
+    #101b31 25%,
+    #1d3148 50%,
+    #14243d 75%,
+    #07111f 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+  z-index: -2;
+}
+
+/* Mesh-noise overlay for depth */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(ellipse at 20% 80%, rgba(124,58,237,0.20) 0%, transparent 60%),
+                    radial-gradient(ellipse at 80% 20%, rgba(20,184,166,0.18) 0%, transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 0%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 100% 100%; }
+  75%  { background-position: 0% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* ── 4. Floating Background Orbs ─────────────────────────── */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  z-index: -1;
+  pointer-events: none;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #6366f1, transparent);
+  top: -120px;
+  left: -100px;
+  animation-delay: 0s;
+  animation-duration: 22s;
+}
+
+.orb-2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #06b6d4, transparent);
+  bottom: -80px;
+  right: -80px;
+  animation-delay: -7s;
+  animation-duration: 18s;
+}
+
+.orb-3 {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, #8b5cf6, transparent);
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: -14s;
+  animation-duration: 25s;
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 30px) scale(0.97); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* ── 5. App Container ─────────────────────────────────────── */
+.app-container {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── 6. Brand Header ─────────────────────────────────────── */
+.brand-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  animation: fadeDown 0.7s ease both;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brand-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  letter-spacing: -0.3px;
+}
+
+.brand-ai {
+  background: linear-gradient(90deg, var(--clr-primary-lt), var(--clr-accent-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.module-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  padding: 4px 12px;
+  border-radius: 50px;
+  letter-spacing: 0.3px;
+}
+
+/* ── 7. Glass Card ───────────────────────────────────────── */
+.glass-card {
+  width: 100%;
+  background: var(--clr-glass-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--clr-glass-border);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px 32px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+}
+
+/* ── 8. Card Hero ────────────────────────────────────────── */
+.card-hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.hero-icon {
+  display: inline-flex;
+  margin-bottom: 16px;
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.07); }
+}
+
+.card-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  background: linear-gradient(120deg, #f8fafc, var(--clr-primary-lt), var(--clr-accent-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  font-size: 0.88rem;
+  color: var(--clr-text-muted);
+  font-weight: 400;
+  max-width: 340px;
+  margin: 0 auto;
+  line-height: 1.55;
+}
+
+/* ── 9. Score Range Bar ──────────────────────────────────── */
+.score-range-bar {
+  display: flex;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: 28px;
+  position: relative;
+  height: 28px;
+  gap: 2px;
+}
+
+.range-segment {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-base);
+}
+
+.range-segment.poor      { background: rgba(244, 63,  94,  0.25); color: #fda4af; }
+.range-segment.good      { background: rgba(245, 158, 11,  0.25); color: #fcd34d; }
+.range-segment.excellent { background: rgba(16,  185, 129, 0.25); color: #6ee7b7; }
+
+.range-labels {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.range-labels span {
+  font-size: 0.65rem;
+  color: var(--clr-text-faint);
+}
+
+/* ── 10. Input Section ───────────────────────────────────── */
+.input-section {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.input-field-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.score-input {
+  width: 100%;
+  padding: 15px 16px 15px 44px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-md);
+  color: var(--clr-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), background var(--transition-base);
+  -moz-appearance: textfield; /* remove number arrows Firefox */
+  appearance: textfield;       /* standard property for compatibility */
+}
+
+/* Remove number arrows Chrome/Safari */
+.score-input::-webkit-outer-spin-button,
+.score-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.score-input::placeholder { color: var(--clr-text-faint); }
+
+.score-input:focus {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15), 0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+/* Error state */
+.input-wrapper.has-error .score-input {
+  border-color: var(--clr-poor);
+  box-shadow: 0 0 0 4px rgba(244, 63, 94, 0.12);
+}
+
+.input-error {
+  font-size: 0.78rem;
+  color: #fda4af;
+  font-weight: 500;
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.input-error.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.input-hint {
+  font-size: 0.73rem;
+  color: var(--clr-text-faint);
+}
+
+/* ── 11. Analyze Button ──────────────────────────────────── */
+.analyze-btn {
+  width: 100%;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--clr-primary), #6d28d9, var(--clr-accent));
+  background-size: 200% 200%;
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.2px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateZ(0);
+  transition: background-position var(--transition-slow), transform var(--transition-fast),
+              box-shadow var(--transition-base), opacity var(--transition-fast),
+              filter var(--transition-fast);
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.analyze-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+  transform: translateX(-120%) skewX(-20deg);
+  transition: transform 0.8s ease;
+  z-index: -1;
+}
+
+.analyze-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.analyze-btn:hover {
+  background-position: right center;
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 14px 34px rgba(124, 58, 237, 0.5);
+}
+
+.analyze-btn:hover::before {
+  transform: translateX(120%) skewX(-20deg);
+}
+
+.analyze-btn:hover::after {
+  opacity: 1;
+}
+
+.analyze-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
+}
+
+.analyze-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.24), 0 12px 32px rgba(124, 58, 237, 0.38);
+}
+
+.analyze-btn:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.15);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.2);
+}
+
+/* Loading spinner inside button */
+.btn-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.analyze-btn.loading .btn-text,
+.analyze-btn.loading .btn-icon { display: none; }
+.analyze-btn.loading .btn-spinner { display: block; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── 12. Result Panel ────────────────────────────────────── */
+.result-panel {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── 13. Score Meter (SVG Arc) ───────────────────────────── */
+.score-meter-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.score-meter {
+  width: 200px;
+  height: 110px;
+  overflow: visible;
+}
+
+.meter-score-display {
+  margin-top: -10px;
+  text-align: center;
+}
+
+.meter-score-value {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(120deg, #e0e7ff, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.5s ease;
+}
+
+.meter-score-label {
+  font-size: 0.88rem;
+  color: var(--clr-text-faint);
+  font-weight: 500;
+}
+
+/* ── 14. Category Badge ──────────────────────────────────── */
+.category-badge-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 22px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: background var(--transition-base), color var(--transition-base);
+  animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.category-badge.excellent {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+.category-badge.good {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+}
+.category-badge.poor {
+  background: rgba(244, 63, 94, 0.2);
+  border: 1px solid rgba(244, 63, 94, 0.4);
+  color: #fda4af;
+}
+
+.badge-icon {
+  font-size: 1.1rem;
+}
+
+@keyframes badgePop {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ── 15. Stats Row ───────────────────────────────────────── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.stat-card:hover {
+  background: rgba(124, 58, 237, 0.12);
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-primary-lt);
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  color: var(--clr-text-faint);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── 16. Recommendations ─────────────────────────────────── */
+.recommendations-section {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.rec-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--clr-primary-lt);
+  margin-bottom: 14px;
+  letter-spacing: 0.1px;
+}
+
+.rec-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Each rec item animated in staggered */
+.rec-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  line-height: 1.5;
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: recSlide 0.4s ease forwards;
+  transition: background var(--transition-fast);
+}
+
+.rec-item:hover {
+  background: rgba(124, 58, 237, 0.08);
+  color: var(--clr-text);
+}
+
+.rec-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  margin-top: 1px;
+}
+
+@keyframes recSlide {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ── 17. Reset Button ────────────────────────────────────── */
+.reset-btn {
+  width: 100%;
+  padding: 13px 20px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1.5px solid var(--clr-glass-border);
+  border-radius: var(--radius-md);
+  color: var(--clr-text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+              color var(--transition-fast), transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+  letter-spacing: 0.2px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.reset-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+}
+
+.reset-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: var(--clr-text);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.reset-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.reset-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.reset-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* ── 18. Footer ──────────────────────────────────────────── */
+.app-footer {
+  font-size: 0.72rem;
+  color: var(--clr-text-faint);
+  text-align: center;
+  animation: fadeUp 1s ease both;
+  animation-delay: 0.4s;
+}
+
+/* ── 19. Shared Animations ───────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 20. Score Meter Color Variants ─────────────────────── */
+.result-panel.category-excellent #meterArc { stroke: var(--clr-excellent); }
+.result-panel.category-good      #meterArc { stroke: var(--clr-good); }
+.result-panel.category-poor      #meterArc { stroke: var(--clr-poor); }
+
+.result-panel.category-excellent .meter-score-value {
+  background: linear-gradient(120deg, #6ee7b7, #10b981);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.result-panel.category-good .meter-score-value {
+  background: linear-gradient(120deg, #fcd34d, #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.result-panel.category-poor .meter-score-value {
+  background: linear-gradient(120deg, #fda4af, #f43f5e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── 21. Responsive Design ───────────────────────────────── */
+@media (max-width: 480px) {
+  .glass-card   { padding: 28px 20px 24px; }
+  .card-title   { font-size: 1.3rem; }
+  .stats-row    { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .stat-card    { padding: 10px 6px; }
+  .stat-value   { font-size: 0.92rem; }
+  .module-tag   { display: none; }
+}
+
+@media (max-width: 360px) {
+  .stats-row { grid-template-columns: 1fr; }
+}

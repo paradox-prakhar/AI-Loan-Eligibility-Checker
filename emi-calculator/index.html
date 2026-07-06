@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>EMI Calculator | FinWise AI</title>
+  <meta name="description"
+    content="Calculate your Equated Monthly Instalment (EMI) instantly with FinWise AI's EMI Calculator. Enter loan amount, interest rate, and tenure to get your monthly payment." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- jsPDF & AutoTable CDNs for PDF Report Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Animated Background Orbs -->
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="bg-orb orb-3" aria-hidden="true"></div>
+
+  <!-- Main App Container -->
+  <main class="app-container" role="main">
+
+    <!-- Header / Branding -->
+    <header class="brand-header">
+      <div class="brand-logo" aria-label="FinWise AI Logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect width="32" height="32" rx="10" fill="url(#logoGrad)" />
+          <path d="M8 22L13 13L17 18L21 11L24 16" stroke="white" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6366f1" />
+              <stop offset="1" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">FinWise <span class="brand-ai">AI</span></span>
+      </div>
+      <span class="module-tag">EMI Calculator</span>
+    </header>
+
+    <!-- Glass Card -->
+    <section class="glass-card" aria-labelledby="card-title">
+
+      <!-- Card Hero -->
+      <div class="card-hero">
+        <div class="hero-icon" aria-hidden="true">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="24" fill="rgba(99,102,241,0.20)" />
+            <!-- Rupee / coin icon -->
+            <circle cx="24" cy="24" r="12" stroke="#a5b4fc" stroke-width="2" />
+            <path d="M19 20h10M19 23h10M22 23v5" stroke="#a5b4fc" stroke-width="2" stroke-linecap="round" />
+            <path d="M19 20c0-1.657 2.239-3 5-3s5 1.343 5 3" stroke="#818cf8" stroke-width="1.8"
+              stroke-linecap="round" />
+          </svg>
+        </div>
+        <h1 id="card-title" class="card-title">EMI Calculator</h1>
+        <p class="card-subtitle">Select your loan type and enter your details to compute your Equated Monthly Instalment instantly.</p>
+      </div>
+
+      <!-- Input Section -->
+      <form class="input-section" id="emiForm" novalidate aria-label="EMI calculation form">
+
+        <!-- Loan Type Selection -->
+        <div class="input-group" id="wrap-type">
+          <label for="loanType" class="input-label">
+            <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="#6366f1" stroke-width="2" />
+              <line x1="4" y1="22" x2="4" y2="15" stroke="#6366f1" stroke-width="2" />
+            </svg>
+            Loan Type
+          </label>
+          <div class="input-field-container select-field-container">
+            <select id="loanType" class="emi-input select-input" aria-label="Select loan type">
+              <option value="personal" selected>Personal Loan</option>
+              <option value="home">Home Loan</option>
+              <option value="car">Car Loan</option>
+              <option value="education">Education Loan</option>
+            </select>
+          </div>
+          <p class="input-error" id="err-type" role="alert" aria-live="assertive"></p>
+        </div>
+
+        <!-- Loan Amount -->
+        <div class="input-group" id="wrap-amount">
+          <label for="loanAmount" class="input-label">
+            <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="#6366f1"
+                stroke-width="2" />
+              <path d="M8 12h8M12 8v8" stroke="#6366f1" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            Loan Amount
+          </label>
+          <div class="input-field-container">
+            <span class="input-prefix">₹</span>
+            <input
+              type="number"
+              id="loanAmount"
+              class="emi-input"
+              placeholder="e.g. 500000"
+              min="1000"
+              max="100000000"
+              inputmode="decimal"
+              autocomplete="off"
+              aria-describedby="err-amount"
+            />
+          </div>
+          <p class="input-error" id="err-amount" role="alert" aria-live="assertive"></p>
+        </div>
+
+        <!-- Interest Rate -->
+        <div class="input-group" id="wrap-rate">
+          <label for="interestRate" class="input-label">
+            <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M19 5L5 19" stroke="#6366f1" stroke-width="2" stroke-linecap="round" />
+              <circle cx="7" cy="7" r="2" stroke="#6366f1" stroke-width="2" />
+              <circle cx="17" cy="17" r="2" stroke="#6366f1" stroke-width="2" />
+            </svg>
+            Annual Interest Rate
+          </label>
+          <div class="input-field-container">
+            <input
+              type="number"
+              id="interestRate"
+              class="emi-input"
+              placeholder="e.g. 8.5"
+              min="0"
+              max="100"
+              step="0.01"
+              inputmode="decimal"
+              autocomplete="off"
+              aria-describedby="err-rate"
+            />
+            <span class="input-suffix">%</span>
+          </div>
+          <p class="input-error" id="err-rate" role="alert" aria-live="assertive"></p>
+        </div>
+
+        <!-- Loan Tenure -->
+        <div class="input-group" id="wrap-tenure">
+          <label for="loanTenure" class="input-label">
+            <svg class="label-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="17" rx="2" stroke="#6366f1" stroke-width="2" />
+              <path d="M3 9h18" stroke="#6366f1" stroke-width="2" />
+              <path d="M8 2v3M16 2v3" stroke="#6366f1" stroke-width="2" stroke-linecap="round" />
+              <path d="M7 14h2v3H7z" fill="#6366f1" />
+            </svg>
+            Loan Tenure
+          </label>
+          <div class="input-field-container">
+            <input
+              type="number"
+              id="loanTenure"
+              class="emi-input"
+              placeholder="e.g. 60"
+              min="1"
+              max="360"
+              inputmode="numeric"
+              autocomplete="off"
+              aria-describedby="err-tenure"
+            />
+            <span class="input-suffix">Months</span>
+          </div>
+          <p class="input-error" id="err-tenure" role="alert" aria-live="assertive"></p>
+        </div>
+
+        <!-- Calculate Button -->
+        <button id="calcBtn" class="calc-btn" type="submit" aria-label="Calculate EMI">
+          <span class="btn-text">Calculate EMI</span>
+          <span class="btn-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M13 6L19 12L13 18" stroke="white" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </span>
+          <!-- Loading state spinner -->
+          <span class="btn-spinner" aria-hidden="true" style="display: none;"></span>
+        </button>
+      </form>
+
+      <!-- Result Panel (hidden until calculated) -->
+      <section class="result-panel" id="resultPanel" aria-live="polite" aria-atomic="true" hidden>
+
+        <!-- Monthly EMI Highlight -->
+        <div class="emi-highlight">
+          <p class="emi-highlight-label" id="emiLabelText">Monthly EMI</p>
+          <p class="emi-highlight-value" id="emiValue">₹0</p>
+          <p class="emi-highlight-sub" id="emiSub"></p>
+        </div>
+
+        <!-- Breakdown Cards -->
+        <div class="breakdown-grid">
+          <div class="breakdown-card">
+            <span class="bc-icon" aria-hidden="true">💰</span>
+            <span class="bc-value" id="bcPrincipal">—</span>
+            <span class="bc-label">Principal Amount</span>
+            <span class="bc-percentage" id="pctPrincipal">(–)</span>
+          </div>
+          <div class="breakdown-card">
+            <span class="bc-icon" aria-hidden="true">📈</span>
+            <span class="bc-value" id="bcInterest">—</span>
+            <span class="bc-label">Total Interest</span>
+            <span class="bc-percentage" id="pctInterest">(–)</span>
+          </div>
+          <div class="breakdown-card accent">
+            <span class="bc-icon" aria-hidden="true">🏦</span>
+            <span class="bc-value" id="bcTotal">—</span>
+            <span class="bc-label">Total Payable</span>
+            <span class="bc-percentage" id="pctTotal">(100%)</span>
+          </div>
+        </div>
+
+        <!-- Donut Chart -->
+        <div class="chart-wrapper" aria-label="Loan breakdown chart">
+          <svg class="donut-chart" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="donut-track" cx="60" cy="60" r="48" />
+            <circle class="donut-principal" id="donutPrincipal" cx="60" cy="60" r="48"
+              stroke-dasharray="0 301.6" />
+            <circle class="donut-interest" id="donutInterest" cx="60" cy="60" r="48"
+              stroke-dasharray="0 301.6" />
+            <text x="60" y="56" class="donut-center-label">Ratio P:I</text>
+            <text x="60" y="70" id="donutRatioText" class="donut-center-value">–</text>
+          </svg>
+          <div class="donut-legend">
+            <div class="legend-item">
+              <span class="legend-dot principal"></span>
+              <span class="legend-text">Principal (<span id="donutPctPrincipal">–</span>)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-dot interest"></span>
+              <span class="legend-text">Interest (<span id="donutPctInterest">–</span>)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Amortization Schedule Section -->
+        <div class="amortization-section" id="amortizationSection">
+          <div class="section-header">
+            <h3 class="schedule-title">Amortization Schedule</h3>
+            <span class="schedule-subtitle">Month-by-month repayment breakdown</span>
+          </div>
+          <div class="table-container-outer">
+            <div class="table-container">
+              <table class="schedule-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Month</th>
+                    <th scope="col">EMI</th>
+                    <th scope="col">Principal Paid</th>
+                    <th scope="col">Interest Paid</th>
+                    <th scope="col">Remaining Balance</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                  <!-- Generated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pagination-controls" id="paginationControls" aria-label="Amortization pagination">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Action Panel -->
+        <div class="action-panel">
+          <button id="downloadPdfBtn" class="download-btn" type="button" aria-label="Download EMI PDF Report">
+            <span class="btn-text">Download Report (PDF)</span>
+            <span class="btn-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="white" stroke-width="2.2"
+                  stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </button>
+          <button id="resetBtn" class="reset-btn" type="button" aria-label="Reset the calculator">
+            Recalculate
+          </button>
+        </div>
+
+      </section>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2025 FinWise AI · Calculations are for illustrative purposes only.</p>
+    </footer>
+
+  </main>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+
+</html>

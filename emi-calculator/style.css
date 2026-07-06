@@ -1,0 +1,950 @@
+/* =========================================================
+   FinWise AI — EMI Calculator
+   style.css  |  Modern Fintech + Glassmorphism UI
+   Matches Credit Score Analyzer theme exactly
+   ========================================================= */
+
+/* ── 1. Google Font & CSS Custom Properties ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* Color palette – identical to Credit Score module */
+  --clr-bg-start:    #0a0a1a;
+  --clr-bg-mid:      #0f0f2e;
+  --clr-bg-end:      #0d1b3e;
+
+  --clr-primary:     #6366f1;   /* indigo */
+  --clr-primary-lt:  #818cf8;
+  --clr-accent:      #06b6d4;   /* cyan */
+  --clr-accent-lt:   #38bdf8;
+  --clr-success:     #10b981;
+  --clr-warning:     #f59e0b;
+  --clr-danger:      #f43f5e;
+
+  --clr-glass-bg:    rgba(255, 255, 255, 0.06);
+  --clr-glass-border:rgba(255, 255, 255, 0.12);
+  --clr-glass-hover: rgba(255, 255, 255, 0.10);
+
+  --clr-text:        #f1f5f9;
+  --clr-text-muted:  #94a3b8;
+  --clr-text-faint:  #64748b;
+
+  /* Spacing & radius */
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  22px;
+  --radius-xl:  30px;
+
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── 2. Reset & Base ─────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--clr-bg-start);
+  color: var(--clr-text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px 48px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── 3. Animated Gradient Background ─────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    #0a0a1a 0%,
+    #0f0f2e 25%,
+    #0d1b3e 50%,
+    #071022 75%,
+    #0a0a1a 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
+  z-index: -2;
+}
+
+/* Mesh-noise overlay for depth */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 80%, rgba(99,102,241,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(6,182,212,0.12) 0%, transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 0%; }
+  25%  { background-position: 100% 0%; }
+  50%  { background-position: 100% 100%; }
+  75%  { background-position: 0% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* ── 4. Floating Background Orbs ─────────────────────────── */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  z-index: -1;
+  pointer-events: none;
+  animation: orbFloat 20s ease-in-out infinite;
+}
+
+.orb-1 {
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #6366f1, transparent);
+  top: -120px;
+  left: -100px;
+  animation-duration: 22s;
+}
+
+.orb-2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, #06b6d4, transparent);
+  bottom: -80px;
+  right: -80px;
+  animation-delay: -7s;
+  animation-duration: 18s;
+}
+
+.orb-3 {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, #8b5cf6, transparent);
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: -14s;
+  animation-duration: 25s;
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 30px) scale(0.97); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+/* ── 5. App Container ─────────────────────────────────────── */
+.app-container {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ── 6. Brand Header ─────────────────────────────────────── */
+.brand-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  animation: fadeDown 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brand-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  letter-spacing: -0.3px;
+}
+
+.brand-ai {
+  background: linear-gradient(90deg, var(--clr-primary-lt), var(--clr-accent-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.module-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  padding: 4px 12px;
+  border-radius: 50px;
+  letter-spacing: 0.3px;
+}
+
+/* ── 7. Glass Card ───────────────────────────────────────── */
+.glass-card {
+  width: 100%;
+  background: var(--clr-glass-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid var(--clr-glass-border);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px 32px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.2) inset;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+  transition: box-shadow var(--transition-base);
+}
+
+.glass-card:hover {
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+/* ── 8. Card Hero ────────────────────────────────────────── */
+.card-hero {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.hero-icon {
+  display: inline-flex;
+  margin-bottom: 16px;
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+.card-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  background: linear-gradient(120deg, #e0e7ff, #a5b4fc, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  font-size: 0.92rem;
+  color: var(--clr-text-muted);
+  line-height: 1.55;
+}
+
+/* ── 9. Input Section ────────────────────────────────────── */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.label-icon {
+  flex-shrink: 0;
+}
+
+.input-field-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix,
+.input-suffix {
+  position: absolute;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--clr-primary-lt);
+  pointer-events: none;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+
+.input-prefix { left: 16px; }
+.input-suffix { right: 16px; }
+
+.emi-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--clr-glass-border);
+  border-radius: var(--radius-md);
+  padding: 14px 48px 14px 40px;   /* space for prefix & suffix */
+  color: var(--clr-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    background var(--transition-base);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Dropdown specific */
+.select-field-container::after {
+  content: '▼';
+  position: absolute;
+  right: 16px;
+  font-size: 0.72rem;
+  color: var(--clr-primary-lt);
+  pointer-events: none;
+}
+
+.select-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-left: 16px;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.select-input option {
+  background: #0f0f2e; /* dark fallback background for options list */
+  color: var(--clr-text);
+}
+
+/* Input without suffix needs less right padding */
+#loanAmount {
+  padding-right: 16px;
+}
+
+.emi-input::-webkit-outer-spin-button,
+.emi-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.emi-input::placeholder {
+  color: var(--clr-text-faint);
+}
+
+.emi-input:hover {
+  border-color: rgba(99, 102, 241, 0.45);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.emi-input:focus {
+  border-color: var(--clr-primary);
+  background: rgba(99, 102, 241, 0.07);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+
+.emi-input:focus + .input-suffix,
+.emi-input:focus ~ .input-prefix {
+  color: var(--clr-accent-lt);
+}
+
+/* Validation states */
+.input-group.error .emi-input {
+  border-color: var(--clr-danger);
+  background: rgba(244, 63, 94, 0.07);
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15);
+}
+
+.input-error {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--clr-danger);
+  min-height: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.input-error.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 10. Calculate Button ────────────────────────────────── */
+.calc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 24px;
+  margin-top: 4px;
+  background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+}
+
+.calc-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.calc-btn:hover::before { opacity: 1; }
+.calc-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(99, 102, 241, 0.5);
+}
+
+.calc-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  transition: transform var(--transition-fast);
+}
+
+.calc-btn:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+/* Spinner */
+.btn-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 11. Result Panel ────────────────────────────────────── */
+.result-panel {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.result-panel[hidden] { display: none; }
+
+/* EMI Highlight */
+.emi-highlight {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(6,182,212,0.10));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px 22px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.emi-highlight::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.emi-highlight-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--clr-text-muted);
+  margin-bottom: 8px;
+}
+
+.emi-highlight-value {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  background: linear-gradient(120deg, #e0e7ff, #a5b4fc, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 6px;
+  animation: countUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.emi-highlight-sub {
+  font-size: 0.82rem;
+  color: var(--clr-text-muted);
+}
+
+@keyframes countUp {
+  from { transform: scale(0.85); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* Breakdown Grid */
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.breakdown-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--clr-glass-border);
+  border-radius: var(--radius-md);
+  padding: 18px 12px;
+  text-align: center;
+  transition: background var(--transition-fast), border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.breakdown-card:hover {
+  background: var(--clr-glass-hover);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.breakdown-card.accent {
+  border-color: rgba(6, 182, 212, 0.35);
+  background: rgba(6, 182, 212, 0.07);
+}
+
+.bc-icon {
+  font-size: 1.4rem;
+  margin-bottom: 2px;
+}
+
+.bc-value {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  white-space: nowrap;
+}
+
+.bc-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--clr-text-faint);
+  letter-spacing: 0.2px;
+}
+
+.bc-percentage {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--clr-primary-lt);
+}
+
+.breakdown-card.accent .bc-percentage {
+  color: var(--clr-accent-lt);
+}
+
+/* ── 12. Donut Chart ─────────────────────────────────────── */
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.donut-chart {
+  width: 160px;
+  height: 160px;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.donut-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 14;
+}
+
+.donut-principal {
+  fill: none;
+  stroke: var(--clr-primary-lt);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.donut-interest {
+  fill: none;
+  stroke: var(--clr-accent);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+              stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+.donut-center-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  fill: var(--clr-text-faint);
+  text-anchor: middle;
+  transform-origin: 60px 60px;
+  transform: rotate(90deg);
+}
+
+.donut-center-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  fill: var(--clr-text);
+  text-anchor: middle;
+  transform-origin: 60px 60px;
+  transform: rotate(90deg);
+}
+
+.donut-legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.principal { background: var(--clr-primary-lt); }
+.legend-dot.interest  { background: var(--clr-accent); }
+
+.legend-text { font-weight: 500; }
+
+/* ── 13. Amortization Schedule ───────────────────────────── */
+.amortization-section {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--clr-glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px 20px;
+}
+
+.section-header {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.schedule-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 2px;
+}
+
+.schedule-subtitle {
+  font-size: 0.78rem;
+  color: var(--clr-text-faint);
+}
+
+.table-container-outer {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table-container {
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 6px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.82rem;
+}
+
+.schedule-table th, 
+.schedule-table td {
+  padding: 12px 16px;
+  white-space: nowrap;
+}
+
+.schedule-table th {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--clr-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+}
+
+.schedule-table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background var(--transition-fast);
+}
+
+.schedule-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.schedule-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.schedule-table td {
+  color: var(--clr-text);
+  font-weight: 500;
+}
+
+.schedule-table td:nth-child(5) {
+  color: var(--clr-accent-lt); /* remaining balance highlighted */
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  gap: 12px;
+}
+
+.page-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--clr-glass-border);
+  color: var(--clr-text);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--clr-glass-hover);
+  border-color: var(--clr-primary-lt);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  font-weight: 500;
+}
+
+/* ── 14. Action Panel ────────────────────────────────────── */
+.action-panel {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex: 1;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--clr-success), #059669);
+  border: none;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+}
+
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.download-btn:active {
+  transform: translateY(0);
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1.5px solid var(--clr-glass-border);
+  border-radius: var(--radius-md);
+  color: var(--clr-text-muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 14px 24px;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.reset-btn:hover {
+  border-color: var(--clr-primary-lt);
+  color: var(--clr-primary-lt);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* ── 15. Footer ──────────────────────────────────────────── */
+.app-footer {
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--clr-text-faint);
+  padding-top: 4px;
+  animation: fadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.3s;
+}
+
+/* ── 16. Keyframe Animations ─────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 17. Responsive ──────────────────────────────────────── */
+@media (max-width: 580px) {
+  body {
+    padding: 16px 12px 40px;
+  }
+
+  .glass-card {
+    padding: 28px 20px 24px;
+    border-radius: var(--radius-lg);
+  }
+
+  .card-title {
+    font-size: 1.35rem;
+  }
+
+  .emi-highlight-value {
+    font-size: 2.2rem;
+  }
+
+  .breakdown-grid {
+    grid-template-columns: 1fr; /* Stack on small screens */
+    gap: 10px;
+  }
+
+  .bc-value {
+    font-size: 0.92rem;
+  }
+
+  .bc-label {
+    font-size: 0.68rem;
+  }
+
+  .donut-chart {
+    width: 130px;
+    height: 130px;
+  }
+
+  .module-tag {
+    display: none;
+  }
+
+  .action-panel {
+    flex-direction: column;
+  }
+
+  .download-btn, .reset-btn {
+    width: 100%;
+    padding: 12px 20px;
+  }
+}

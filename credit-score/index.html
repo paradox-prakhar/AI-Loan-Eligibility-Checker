@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>Credit Score Analyzer | FinWise AI</title>
+  <meta name="description"
+    content="Analyze your credit score instantly and get personalized financial recommendations with FinWise AI's Credit Score Analyzer." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Animated Background Orbs -->
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="bg-orb orb-3" aria-hidden="true"></div>
+
+  <!-- Main App Container -->
+  <main class="app-container" role="main">
+
+    <!-- Header / Branding -->
+    <header class="brand-header">
+      <div class="brand-logo" aria-label="FinWise AI Logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <rect width="32" height="32" rx="10" fill="url(#logoGrad)" />
+          <path d="M8 22L13 13L17 18L21 11L24 16" stroke="white" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#6366f1" />
+              <stop offset="1" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="brand-name">FinWise <span class="brand-ai">AI</span></span>
+      </div>
+      <span class="module-tag">Credit Score Analyzer</span>
+    </header>
+
+    <!-- Glass Card -->
+    <section class="glass-card" aria-labelledby="card-title">
+
+      <!-- Card Hero -->
+      <div class="card-hero">
+        <div class="hero-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <circle cx="20" cy="20" r="20" fill="rgba(99,102,241,0.25)" />
+            <path d="M12 28C12 23.5817 15.5817 20 20 20C24.4183 20 28 23.5817 28 28" stroke="#a5b4fc"
+              stroke-width="2" stroke-linecap="round" />
+            <circle cx="20" cy="15" r="4" stroke="#a5b4fc" stroke-width="2" />
+            <path d="M20 20V28" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="2 2" />
+          </svg>
+        </div>
+        <h1 id="card-title" class="card-title">Analyze Your Credit Score</h1>
+        <p class="card-subtitle">Enter your score to receive an instant financial health assessment and tailored advice.</p>
+      </div>
+
+      <!-- Score Range Visual -->
+      <div class="score-range-bar" role="img" aria-label="Credit score range from Poor to Excellent">
+        <div class="range-segment poor">Poor</div>
+        <div class="range-segment good">Good</div>
+        <div class="range-segment excellent">Excellent</div>
+        <div class="range-labels">
+          <span>300</span>
+          <span>650</span>
+          <span>750</span>
+          <span>900</span>
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="input-section">
+        <div class="input-wrapper" id="input-wrapper">
+          <label for="creditScoreInput" class="input-label">Credit Score</label>
+          <div class="input-field-container">
+            <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#6366f1" stroke-width="2" stroke-linejoin="round" />
+              <path d="M2 17L12 22L22 17" stroke="#6366f1" stroke-width="2" stroke-linejoin="round" />
+              <path d="M2 12L12 17L22 12" stroke="#6366f1" stroke-width="2" stroke-linejoin="round" />
+            </svg>
+            <input
+              type="number"
+              id="creditScoreInput"
+              class="score-input"
+              placeholder="300 – 900"
+              min="300"
+              max="900"
+              aria-describedby="input-error score-hint"
+              autocomplete="off"
+            />
+          </div>
+          <!-- Validation Error -->
+          <p class="input-error" id="input-error" role="alert" aria-live="assertive"></p>
+          <p class="input-hint" id="score-hint">Valid range: 300 (minimum) to 900 (maximum)</p>
+        </div>
+
+        <!-- Analyze Button -->
+        <button id="analyzeBtn" class="analyze-btn" type="button" aria-label="Analyze my credit score">
+          <span class="btn-text">Analyze Score</span>
+          <span class="btn-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12H19M13 6L19 12L13 18" stroke="white" stroke-width="2.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </span>
+          <!-- Loading spinner -->
+          <span class="btn-spinner" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <!-- Result Panel (hidden until analyzed) -->
+      <section class="result-panel" id="resultPanel" aria-live="polite" aria-atomic="true" hidden>
+
+        <!-- Score Meter -->
+        <div class="score-meter-container">
+          <svg class="score-meter" viewBox="0 0 200 110" aria-hidden="true">
+            <!-- Track arc -->
+            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="14"
+              stroke-linecap="round" />
+            <!-- Progress arc -->
+            <path id="meterArc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#6366f1" stroke-width="14"
+              stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2"
+              style="transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1), stroke 0.6s ease;" />
+          </svg>
+          <!-- Score Display -->
+          <div class="meter-score-display">
+            <span class="meter-score-value" id="meterScoreValue">0</span>
+            <span class="meter-score-label">/ 900</span>
+          </div>
+        </div>
+
+        <!-- Category Badge -->
+        <div class="category-badge-wrapper">
+          <div class="category-badge" id="categoryBadge">
+            <span class="badge-icon" id="badgeIcon" aria-hidden="true"></span>
+            <span class="badge-label" id="categoryLabel">—</span>
+          </div>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-value" id="statPercentile">—</span>
+            <span class="stat-label">Percentile</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="statRisk">—</span>
+            <span class="stat-label">Risk Level</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="statLoanChance">—</span>
+            <span class="stat-label">Loan Approval</span>
+          </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recommendations-section">
+          <h2 class="rec-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="10" stroke="#a5b4fc" stroke-width="2" />
+              <path d="M12 8V13M12 16V16.5" stroke="#a5b4fc" stroke-width="2.2" stroke-linecap="round" />
+            </svg>
+            Personalized Recommendations
+          </h2>
+          <ul class="rec-list" id="recList" role="list"></ul>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="resetBtn" class="reset-btn" type="button" aria-label="Reset and analyze again">
+          Analyze Another Score
+        </button>
+
+      </section>
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>© 2025 FinWise AI · Credit data is illustrative only.</p>
+    </footer>
+
+  </main>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+
+</html>
